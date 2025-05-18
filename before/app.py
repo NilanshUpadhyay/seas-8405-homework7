@@ -21,8 +21,8 @@ def ping():
     if not ip:
         return jsonify({"error": "Missing IP address"}), 400
     try:
-        # Use ping -n 1 for Windows compatibility
-        result = subprocess.check_output(f"ping -n 1 {ip}", shell=True, text=True, stderr=subprocess.STDOUT)
+        # Use /bin/sh -c to support command injection in Alpine
+        result = subprocess.check_output(f"/bin/sh -c 'ping -c 1 {ip}'", shell=True, text=True, stderr=subprocess.STDOUT)
         return result
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Ping failed: {e.output}"}), 500
@@ -36,8 +36,8 @@ def calculate():
     if not expression:
         return jsonify({"error": "Missing expression"}), 400
     try:
-        # Dangerous use of eval
-        result = eval(expression)
+        # Dangerous use of eval, simplified for basic expressions
+        result = eval(expression, {"__builtins__": {}})
         return str(result)
     except Exception as e:
         return jsonify({"error": f"Calculation failed: {str(e)}"}), 500
