@@ -1,13 +1,13 @@
 # Pre-build security checks
 check:
-	@echo "Running code analysis with Bandit..."
+	@echo	"Running code analysis with Bandit..."
 	docker run --rm -v $(PWD):/app python:3.9-slim sh -c "pip install bandit && bandit -r /app"
-	@echo "Running dependency check with pip-audit..."
+	@echo	"Running dependency check with pip-audit..."
 	docker run --rm -v $(PWD):/app python:3.9-slim sh -c "pip install pip-audit && pip-audit -r /app/requirements.txt"
 
 # Host security check
 host-security:
-	@echo "Running Docker Bench for Security..."
+	@echo	"Running Docker Bench for Security..."
 	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock docker/docker-bench-security
 
 # Build Docker image after security checks
