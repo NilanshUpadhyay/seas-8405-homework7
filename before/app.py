@@ -22,7 +22,7 @@ def ping():
         return jsonify({"error": "Missing IP address"}), 400
     try:
         # Direct shell execution for command injection
-        result = subprocess.check_output(f"ping -c 1 {ip}", shell=True, text=True, stderr=subprocess.STDOUT)
+        result = subprocess.check_output(f"/bin/sh -c 'ping -c 1 {ip}'", shell=True, text=True, stderr=subprocess.STDOUT)
         return result
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Ping failed: {e.output}"}), 500
@@ -36,7 +36,7 @@ def calculate():
     if not expression:
         return jsonify({"error": "Missing expression"}), 400
     try:
-        # Dangerous use of eval, no built-in restrictions
+        # Dangerous use of eval
         result = eval(expression)
         return str(result)
     except Exception as e:
